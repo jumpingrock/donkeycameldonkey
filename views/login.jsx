@@ -3,14 +3,14 @@ var React = require("react");
 class login extends React.Component {
   render() {
 
-    console.log(this.props.list[0]);
+    //console.log(this.props.list[0]);
 
     return (
       <html>
         <head />
         <body>
           <h2>DONKEY CAMEL DONKEY</h2>
-          <form className="user-form" method="POST" action="/users">
+          <form className="user-form" method="POST" action="">
             <div className="user-attribute">
               name<input name="name" type="text" />
             </div>

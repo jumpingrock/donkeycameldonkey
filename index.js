@@ -26,6 +26,7 @@ pool.on('error', function (err) {
 // Init express app
 const app = express();
 
+
 // Set up middleware
 app.use(methodOverride('_method'));
 app.use(cookieParser());
@@ -38,6 +39,7 @@ const reactEngine = require('express-react-views').createEngine();
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jsx');
 app.engine('jsx', reactEngine);
+app.use(express.static(__dirname + '/public'));
 
 /**
  * ===================================
@@ -76,33 +78,56 @@ app.get('/', (request, response) => {
   
 });
 
-app.post('/login', (request, response) => {
-  //   console.log('in mainpage get / page');
-    const queryString = 'SELECT * FROM users';
-    pool.query(queryString, (error, queryResult) => {
-      if (error){
-        console.log(error);
-      }
-         
-    });
-    // get the currently set cookie
-    var visits = request.cookies['visits'];
-    // see if there is a cookie
-    if( visits === undefined ){
-      // set the cookie
-      visits = 1;
-      response.cookie('visits', visits);
-      response.redirect('/login');
-      // respond by redirecting to new user creation 
-      //response.send('welcome to project2');
-    }else{
-      // if a cookie exists, make a value thats 1 bigger
-      visits = parseInt( visits ) + 1;
-      response.cookie('visits', visits); 
-      console.log(queryResult.rows)
-      response.render('mainpage.jsx', {list: queryResult.rows});
+  //allow user to log in
+app.get('/login', (request, response) => {
+  response.render('login');
+
+});
+app.post('/login', (request, response)=>{
+  //if username and password match those in database log them in
+  let query = `SELECT * FROM users WHERE userid = '${request.body.name}'`;
+  console.log(query, request.body.name)
+  pool.query(query, (err, queryresponse) => {
+    console.log('query response', queryresponse.rows);
+    if (queryresponse.rows.length === 0){
+      console.log('user does not exist');
+      response. send("<html><body><h3>User does not exist!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Back to Login Page</a></button>");
+    }else {
+      console.log('user exist');
+
     }
   });
+})
+
+
+
+// app.post('/login', (request, response) => {
+//   //   console.log('in mainpage get / page');
+//     const queryString = 'SELECT * FROM users';
+//     pool.query(queryString, (error, queryResult) => {
+//       if (error){
+//         console.log(error);
+//       }
+         
+//     });
+//     // get the currently set cookie
+//     var visits = request.cookies['visits'];
+//     // see if there is a cookie
+//     if( visits === undefined ){
+//       // set the cookie
+//       visits = 1;
+//       response.cookie('visits', visits);
+//       response.redirect('/login');
+//       // respond by redirecting to new user creation 
+//       //response.send('welcome to project2');
+//     }else{
+//       // if a cookie exists, make a value thats 1 bigger
+//       visits = parseInt( visits ) + 1;
+//       response.cookie('visits', visits); 
+//       console.log(queryResult.rows)
+//       response.render('mainpage.jsx', {list: queryResult.rows});
+//     }
+//   });
 
 /**
  * ===================================
