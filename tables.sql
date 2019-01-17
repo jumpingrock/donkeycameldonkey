@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS products (
     productid TEXT,
     brand TEXT,
     product_name TEXT,
-    price INT,
+    price FLOAT,
     retailer TEXT,
     promo_text TEXT,
     product_pic TEXT    
