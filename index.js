@@ -48,34 +48,61 @@ app.engine('jsx', reactEngine);
 // Root GET request (it doesn't belong in any controller file)
 app.get('/', (request, response) => {
 //   console.log('in mainpage get / page');
-  const queryString = 'SELECT * FROM PRODUCTS';
+  const queryString = 'SELECT * FROM products';
   pool.query(queryString, (error, queryResult) => {
     if (error){
       console.log(error);
+    }else{
+      // get the currently set cookie
+      var visits = request.cookies['visits'];
+      // see if there is a cookie
+      if( visits === undefined ){
+        // set the cookie
+        visits = 1;
+        response.cookie('visits', visits);
+        response.redirect('/login');
+        // respond by redirecting to new user creation 
+        //response.send('welcome to project2');
+      }else{
+        // if a cookie exists, make a value thats 1 bigger
+        visits = parseInt( visits ) + 1;
+        response.cookie('visits', visits); 
+        //console.log(queryResult.rows);
+        response.render('mainpage.jsx', {list: queryResult.rows});
+      }
     }
-    console.log(queryResult.rows)
-    //response.render('mainpage.jsx', {list: queryResult.rows});
-    //response.redirect('/');
-    //response.send('user created');
-    // console.log(pool.query('SELECT * FROM users'))
+       
   });
-
-  // get the currently set cookie
-//   var visits = request.cookies['visits'];
-//   // see if there is a cookie
-//   if( visits === undefined ){
-//     // set the cookie
-//     visits = 1;
-//     response.cookie('visits', visits);
-//     // respond by redirecting to new user creation 
-//     //response.send('welcome to project2');
-//   }else{
-//     // if a cookie exists, make a value thats 1 bigger
-//     visits = parseInt( visits ) + 1;
-//     response.cookie('visits', visits);
-//     //response.send('welcome to project2.');   
-//   }
+  
 });
+
+app.post('/login', (request, response) => {
+  //   console.log('in mainpage get / page');
+    const queryString = 'SELECT * FROM users';
+    pool.query(queryString, (error, queryResult) => {
+      if (error){
+        console.log(error);
+      }
+         
+    });
+    // get the currently set cookie
+    var visits = request.cookies['visits'];
+    // see if there is a cookie
+    if( visits === undefined ){
+      // set the cookie
+      visits = 1;
+      response.cookie('visits', visits);
+      response.redirect('/login');
+      // respond by redirecting to new user creation 
+      //response.send('welcome to project2');
+    }else{
+      // if a cookie exists, make a value thats 1 bigger
+      visits = parseInt( visits ) + 1;
+      response.cookie('visits', visits); 
+      console.log(queryResult.rows)
+      response.render('mainpage.jsx', {list: queryResult.rows});
+    }
+  });
 
 /**
  * ===================================
