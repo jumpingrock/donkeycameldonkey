@@ -1,11 +1,11 @@
 var React = require("react");
 var Defaultlayout = require('./default/default');
-const pool = new pg.Pool(configs);
+
 class mainPage extends React.Component {
   render() {
 
     let new_array = this.props.list.map((currentVal) => { //appending into array using map
-      console.log("KJKDHKHSKD",currentVal)
+      //console.log("KJKDHKHSKD",currentVal)
       return(
         <div className='col-md-3'>
           <a href={"/"+currentVal.retailer+"/"+currentVal.productid}><img src={currentVal.product_pic} width='200px' height='200px'/></a>
@@ -15,9 +15,8 @@ class mainPage extends React.Component {
           {console.log(currentVal.retailer, currentVal.productid)}
         </div>
       )
-    })
+    });
     
-
     return (
       <Defaultlayout>
         <div>

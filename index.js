@@ -119,18 +119,19 @@ app.post('/login', (request, response)=>{
   });
 })
 //SELECT * FROM products WHERE retailer ='NTUC' AND productid = 'kss';
-app.get('/:retailer/:id', (request, response)=>{ //creation of dynamic URL using retailer and productid as active input. 
+app.get('/:retailer/:id', (request, response)=>{ 
+  //creation of dynamic URL using retailer and productid as active input. 
   let id = request.params.id
   let retailer = request.params.retailer
   let query = `SELECT * FROM products WHERE productid = '${id}'`;
   let newArray = [];
   pool.query(query, (err, queryResult) =>{
-    for (let i=0; i< queryResult.rows.length; i++){//select the primary item and display as first item 
+    for (let i=0; i< queryResult.rows.length; i++){//select the primary item and display as first item by pushing into new array
       if(queryResult.rows[i].retailer === retailer){
         newArray.push(queryResult.rows[i])
       }
     }
-    for(let i=0; i< queryResult.rows.length; i++){
+    for(let i=0; i< queryResult.rows.length; i++){//append all other item that share the same productid
       if(queryResult.rows[i].retailer !== retailer){
         newArray.push(queryResult.rows[i])
       }
