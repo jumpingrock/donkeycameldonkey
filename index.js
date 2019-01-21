@@ -59,6 +59,7 @@ app.get('/', (request, response) => {
       // get the currently set cookie
       var visits = request.cookies['visits'];
       var usernameCheck = request.cookies['username']
+      console.log(request.cookies['username'])
       // see if there is a cookie
       if( visits === undefined ){
         // set the cookie
@@ -78,7 +79,7 @@ app.get('/', (request, response) => {
        
   });
 });
-
+// * ===================================
   //allow user to log in
 app.get('/login', (request, response) => {
   response.render('login');
@@ -108,7 +109,7 @@ app.post('/login', (request, response)=>{
       if (formHashedPassword === hashedPassword){
         var username = user.userid
         var hashedCookie = sha256(user.userid+SALT);
-        console.log('HASHED COOKIEEEEE   '+hashedCookie);
+        //console.log('HASHED COOKIEEEEE   '+hashedCookie);
         response.cookie('loggedin', 'true');
         response.cookie('username', hashedCookie);
         response.redirect('/');

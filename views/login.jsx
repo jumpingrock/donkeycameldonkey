@@ -1,16 +1,13 @@
 var React = require("react");
-
+var Defaultlayout = require('./default/default');
 class login extends React.Component {
   render() {
 
     //console.log(this.props.list[0]);
 
     return (
-      <html>
-        <head />
-        <body>
-          <h2>DONKEY CAMEL DONKEY</h2>
-          <form className="user-form" method="POST" action="">
+      <Defaultlayout>
+        <form className="user-form" method="POST" action="">
             <div className="user-attribute">
               name<input name="name" type="text" />
             </div>
@@ -19,8 +16,7 @@ class login extends React.Component {
             </div>
             <input name="submit" id="newusercre8" type="submit" />
           </form>
-        </body>
-      </html>
+      </Defaultlayout>
     );
   }
 }
