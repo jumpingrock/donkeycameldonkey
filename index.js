@@ -153,24 +153,47 @@ app.get('/:username', (request, response) => {
   response.render('userpage');
 });
 app.post('/:username/:productid',(request,response)=>{
+  console.log('hi      ', request.body)
+  let values = [request.cookies['username'], request.body.name];
+  let query = 'INSERT INTO itemFollowed (userid, productid) values ($1, $2)';
   
-  let query = 'INSERT INTO itemFollowed (userid, productid) VALUES ($1, $2)';
-  let values = [request.cookies['username'], request.param.productid];
-  console.log(request.cookies['username'])
-  pool.query(query, (error, queryResult) => {
+  console.log(request.cookies['username'], request.body.name);
+  
+  pool.query(query, values, (error, queryResult) => {
+    console.log(values)
     if (error){
       console.log(error);
     }else{
-      //console.log('queryyyyyyy             ',query);
-      console.log(queryResponse);
+      console.log(queryResult.rows);
       response.redirect(`/{request.param.username}`);
       
     }
        
   });
-  response.render('userpage');
+  //response.render('userpage');
 });
 
+
+// app.delete('/:username/:productid',(request,response)=>{
+//   console.log('hi      ', request.body)
+//   let values = [request.cookies['username'], request.body.name];
+//   let query = 'INSERT INTO itemFollowed (userid, productid) values ($1, $2)';
+  
+//   console.log(request.cookies['username'], request.body.name);
+  
+//   pool.query(query, values, (error, queryResult) => {
+//     console.log(values)
+//     if (error){
+//       console.log(error);
+//     }else{
+//       console.log(queryResult.rows);
+//       response.redirect(`/{request.param.username}`);
+      
+//     }
+       
+//   });
+//   //response.render('userpage');
+// });
 
 /**
  * ===================================

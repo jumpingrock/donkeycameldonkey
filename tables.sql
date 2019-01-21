@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS products (
     promo_text TEXT,
     product_pic TEXT    
 );
-CREATE TABLE IF NOT EXISTS itemFollowed(
+CREATE TABLE IF NOT EXISTS itemfollowed(
     id SERIAL PRIMARY KEY,
     userid TEXT,
     productid TEXT
