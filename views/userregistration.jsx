@@ -7,7 +7,7 @@ class login extends React.Component {
 
     return (
       <Defaultlayout>
-        <form action='/login' method='POST'>
+        <form action='/userregistration' method='POST'>
           <div className="form-group row">
             <label for="username" class="col-sm-2 col-form-label">Username</label>
             <div className="col-sm-10">
@@ -26,23 +26,19 @@ class login extends React.Component {
               <div className="form-check">
                 <input className="form-check-input" type="checkbox" id="gridCheck1"/>
                 <label className="form-check-label" for="gridCheck1">
-                  Remember me
                 </label>
               </div>
             </div>
           </div>
           <div className="form-group row">
             <div className="col-sm-10">
-              <button type="submit"  className="btn btn-primary">Sign in</button>
+              <button type="submit"  className="btn btn-primary">Register</button>
             </div>
           </div>
         </form>
-
-        <a class="btn btn-primary" href="/userregistration" role="button">Register</a>
-        
       </Defaultlayout>
     );
   }
 }
 
-module.exports = login;
+module.exports = userregistration;

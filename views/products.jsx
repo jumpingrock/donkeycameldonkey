@@ -21,7 +21,6 @@ class products extends React.Component {
       <Defaultlayout>
         <div>
         <div className="col">
-
         </div>
         <div className="col-12">
           <div className="row">

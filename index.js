@@ -146,12 +146,40 @@ app.get('/:retailer/:id', (request, response)=>{
 // adding products and routing to user page
 app.get('/:username', (request, response) => {
   
-  let username = request.params.username
-  let query = `SELECT * FROM products INNER JOIN products ON itemFollowed.userid = products.userid `
+  let query = `SELECT * FROM itemfollowed WHERE userid = '${request.cookies['username']}'`
+  pool.query(query, (error, queryResult) => { //first pool query to sql table itemfollowed
+    console.log('above if else')
+    if (error){// if else ran 2 times without looping very strange
+      console.log(error);
+    }else{// if else ran 2 times without looping very strange
+      console.log(queryResult.rows);
+      let values = [];
+      var prodQuery = `SELECT * FROM products WHERE productid IN `; //setting up for 2nd pool.query to sql table products
+      for(let i=0; i<queryResult.rows.length;i++){
+        if (i<1){
+          prodQuery = prodQuery + `('${queryResult.rows[i]['productid']}'`;
+        }else{
+          prodQuery = prodQuery + ` , '${queryResult.rows[i]['productid']}'`;
+        }
+      }
+      prodQuery = prodQuery + ')';
+      console.log(prodQuery);
+      pool.query(prodQuery,(error, result) =>{
+        if(error){
+          console.log(error);
+        }else{
+          //console.log(result);
+          response.render('userpage', {list: result.rows});
+        }
+      })
+      
+    }
+       
+  });
 
-
-  response.render('userpage');
+  
 });
+
 app.post('/:username/:productid',(request,response)=>{
   console.log('hi      ', request.body)
   let values = [request.cookies['username'], request.body.name];
@@ -173,27 +201,48 @@ app.post('/:username/:productid',(request,response)=>{
   //response.render('userpage');
 });
 
+app.delete('/delete/:id',(request,response)=>{
+  let query = `DELETE FROM products WHERE id = '${request.params.id}'`;
+  console.log(request.params.id)
 
-// app.delete('/:username/:productid',(request,response)=>{
-//   console.log('hi      ', request.body)
-//   let values = [request.cookies['username'], request.body.name];
-//   let query = 'INSERT INTO itemFollowed (userid, productid) values ($1, $2)';
-  
-//   console.log(request.cookies['username'], request.body.name);
-  
-//   pool.query(query, values, (error, queryResult) => {
-//     console.log(values)
-//     if (error){
-//       console.log(error);
-//     }else{
-//       console.log(queryResult.rows);
-//       response.redirect(`/{request.param.username}`);
+  pool.query(query, (error, queryResult) => {
+    //console.log(values)
+    
+    if (error){
+      console.log(error);
+    }else{
+      console.log(queryResult.rows);
       
-//     }
+    }  
+  response.send(`ITEM DELETED`); 
+  });
+});
+
+app.get('/userregistration', (request, response) => {
+  console.log('this is register gettttt')
+  response.render('userregisterationjajaj');
+});
+
+app.post('/userregistration',(request,response)=>{
+  console.log('this is register posssttttt')
+  let values = [request.body.username, request.body.name];
+  let query = 'INSERT INTO user (userid, pword) values ($1, $2)';
+  
+  console.log(request.body.username, request.body.password);
+  
+  pool.query(query, values, (error, queryResult) => {
+    console.log(values)
+    if (error){
+      console.log(error);
+    }else{
+      console.log(queryResult.rows);
+      //response.redirect(`/{request.param.username}`);
+      
+    }
        
-//   });
-//   //response.render('userpage');
-// });
+  });
+  response.render('userregistrationjajaja');
+});
 
 /**
  * ===================================
