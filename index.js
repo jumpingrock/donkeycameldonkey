@@ -59,7 +59,7 @@ app.get('/', (request, response) => {
       // get the currently set cookie
       var visits = request.cookies['visits'];
       var usernameCheck = request.cookies['username']
-      console.log(request.cookies['username'])
+      //console.log(request.cookies['username'])
       // see if there is a cookie
       if( visits === undefined ){
         // set the cookie
@@ -73,7 +73,7 @@ app.get('/', (request, response) => {
         visits = parseInt( visits ) + 1;
         response.cookie('visits', visits); 
         //console.log(queryResult.rows);
-        response.render('mainpage.jsx', {list: queryResult.rows});
+        response.render('mainpage.jsx', {list: queryResult.rows, username : request.cookies['username']});
       }
     }
        
@@ -87,20 +87,18 @@ app.get('/login', (request, response) => {
 });
 app.post('/login', (request, response)=>{
   //if username and password match those in database log them in
-  let query = `SELECT * FROM users WHERE userid = '${request.body.name}'`;
-  console.log(query, request.body.name)
+  let query = `SELECT * FROM users WHERE userid = '${request.body.username}'`;//request username from form in webpage
 
   pool.query(query, (err, queryResponse) => {
     console.log('query response', queryResponse.rows);
-    console.log(queryResponse)
 
     if (queryResponse.rows.length === 0){
-      console.log('user does not exist');
+      //console.log('user does not exist');
       response.send("<html><body><h3>User does not exist!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Back to Login Page</a></button>");
     
     }else {
-      console.log('user exist');
-      console.log(queryResponse);
+      //console.log('user exist');
+      //console.log(queryResponse);
       let user = queryResponse.rows[0];
       let hashedPassword = sha256(user.pword);
       var formHashedPassword = sha256(request.body.password);
@@ -111,7 +109,7 @@ app.post('/login', (request, response)=>{
         var hashedCookie = sha256(user.userid+SALT);
         //console.log('HASHED COOKIEEEEE   '+hashedCookie);
         response.cookie('loggedin', 'true');
-        response.cookie('username', hashedCookie);
+        response.cookie('username', username);
         response.redirect('/');
       }else {
         response.send("<html><body><h3>Incorrect password!</h3><br /><button><a href='/'>Home</a></button><button><a href='/login'>Back to Login Page</a></button>");
@@ -119,6 +117,7 @@ app.post('/login', (request, response)=>{
     }
   });
 })
+// * ===================================
 //SELECT * FROM products WHERE retailer ='NTUC' AND productid = 'kss';
 app.get('/:retailer/:id', (request, response)=>{ 
   //creation of dynamic URL using retailer and productid as active input. 
@@ -141,9 +140,36 @@ app.get('/:retailer/:id', (request, response)=>{
     response.render('products.jsx', {list: newArray});
     //console.log(queryResult.rows)
  });
- 
-
 })
+
+// * ===================================
+// adding products and routing to user page
+app.get('/:username', (request, response) => {
+  
+  let username = request.params.username
+  let query = `SELECT * FROM products INNER JOIN products ON itemFollowed.userid = products.userid `
+
+
+  response.render('userpage');
+});
+app.post('/:username/:productid',(request,response)=>{
+  
+  let query = 'INSERT INTO itemFollowed (userid, productid) VALUES ($1, $2)';
+  let values = [request.cookies['username'], request.param.productid];
+  console.log(request.cookies['username'])
+  pool.query(query, (error, queryResult) => {
+    if (error){
+      console.log(error);
+    }else{
+      //console.log('queryyyyyyy             ',query);
+      console.log(queryResponse);
+      response.redirect(`/{request.param.username}`);
+      
+    }
+       
+  });
+  response.render('userpage');
+});
 
 
 /**

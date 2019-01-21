@@ -15,3 +15,7 @@ INSERT INTO products (productid, brand, product_name, price, retailer ,promo_tex
 INSERT INTO products (productid, brand, product_name, price, retailer ,promo_text ,product_pic) VALUES ('clas', 'lays', 'CLASSIC', 4.35, 'Cold Storage', '','https://vendorcontentportal.s3.ap-southeast-1.amazonaws.com/product_thumb/1005662_1528887646982.jpg');
 INSERT INTO products (productid, brand, product_name, price, retailer ,promo_text ,product_pic) VALUES ('guin', 'burts', 'GUINNESS POTATO CHIPS', 5.50, 'NTUC', '','https://s3-ap-southeast-1.amazonaws.com/www8.fairprice.com.sg/fpol/media/images/product/L/13127391_L1.jpg');
 INSERT INTO products (productid, brand, product_name, price, retailer ,promo_text ,product_pic) VALUES ('bluc', 'terra', 'POTATO CHIPS BLUES', 6.95, 'Cold Storage', '','https://coldstorage.com.sg/assets/easyimage/0/0f208f2d3fe35a955c0cfdd811598b91.jpg');
+
+INSERT INTO itemFollowed(userid, productid) VALUES ('ken', 'khd');
+INSERT INTO itemFollowed(userid, productid) VALUES ('ken', 'bluc');
+INSERT INTO itemFollowed(userid, productid) VALUES ('ken', 'kssnv');
